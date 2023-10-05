@@ -10,10 +10,12 @@ function App() {
     expectedInterest: "",
     investmentDuration: "",
   });
-  const [yearlyData, setYearlyData] = useState([]);
+
+  const [yearlyData, setYearlyData] = useState();
 
   const saveInvestmentDataHandler = (enteredInvestmentData) => {
     setInvestmentData(enteredInvestmentData);
+    calculateHandler(investmentData);
   };
 
   const resetInvestmentDataHandler = (enteredInvestmentData) => {
@@ -33,15 +35,16 @@ function App() {
 
     const yearlyDataTemp = []; // per-year results
 
-    let currentSavings = +userInput["current-savings"]; // feel free to change the shape of this input object!
-    const yearlyContribution = +userInput["yearly-contribution"]; // as mentioned: feel free to change the shape...
-    const expectedReturn = +userInput["expected-return"] / 100;
-    const duration = +userInput["duration"];
+    let currentSavings = investmentData.currentSavings; // feel free to change the shape of this input object!
+    const yearlyContribution = investmentData.yearlySavings; // as mentioned: feel free to change the shape...
+    const expectedReturn = investmentData.expectedInterest / 100;
+    const duration = investmentData.investmentDuration;
 
     // The below code calculates yearly results (total savings, interest etc)
     for (let i = 0; i < duration; i++) {
       const yearlyInterest = currentSavings * expectedReturn;
       currentSavings += yearlyInterest + yearlyContribution;
+
       yearlyDataTemp.push({
         // feel free to change the shape of the data pushed to the array!
         year: i + 1,
@@ -50,8 +53,7 @@ function App() {
         yearlyContribution: yearlyContribution,
       });
     }
-
-    // do something with yearlyData ...
+    setYearlyData(yearlyDataTemp);
   };
 
   return (
@@ -65,7 +67,7 @@ function App() {
       {/* Todo: Show below table conditionally (only once result data is available) */}
       {/* Show fallback text if no data is available */}
 
-      <Investment />
+      <Investment investments={yearlyData} />
     </div>
   );
 }
