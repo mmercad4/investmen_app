@@ -35,6 +35,8 @@ const Form = (props) => {
   const resetHandler = (event) => {
     event.preventDefault();
 
+    props.onResetInvestmentData();
+
     setUserInput({
       currentSavings: "",
       yearlySavings: "",
