@@ -46,7 +46,7 @@ function App() {
     });
   };
 
-  let content = <h1>No investment data</h1>;
+  let content = <h1 className="noInvestmentData-header">No investment data</h1>;
   console.log(yearlyData.length);
 
   if (yearlyData.length > 0) {
