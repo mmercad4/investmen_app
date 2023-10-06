@@ -11,11 +11,30 @@ function App() {
     investmentDuration: "",
   });
 
-  const [yearlyData, setYearlyData] = useState();
+  const [yearlyData, setYearlyData] = useState([]);
 
   const saveInvestmentDataHandler = (enteredInvestmentData) => {
     setInvestmentData(enteredInvestmentData);
-    calculateHandler(investmentData);
+
+    const yearlyDataTemp = []; 
+
+    let currentSavings = +enteredInvestmentData.currentSavings; // feel free to change the shape of this input object!
+    const yearlyContribution = +enteredInvestmentData.yearlySavings; // as mentioned: feel free to change the shape...
+    const expectedReturn = +enteredInvestmentData.expectedInterest / 100;
+    const duration = +enteredInvestmentData.investmentDuration;
+
+    for (let i = 0; i < duration; i++) {
+      const yearlyInterest = currentSavings * expectedReturn;
+      currentSavings += yearlyInterest + yearlyContribution;
+
+      yearlyDataTemp.push({
+        year: i + 1,
+        yearlyInterest: yearlyInterest,
+        savingsEndOfYear: currentSavings,
+        yearlyContribution: yearlyContribution,
+      });
+    }
+    setYearlyData(yearlyDataTemp);
   };
 
   const resetInvestmentDataHandler = (enteredInvestmentData) => {
@@ -25,35 +44,6 @@ function App() {
       expectedInterest: "",
       investmentDuration: "",
     });
-  };
-
-  console.log(investmentData);
-
-  const calculateHandler = (userInput) => {
-    // Should be triggered when form is submitted
-    // You might not directly want to bind it to the submit event on the form though...
-
-    const yearlyDataTemp = []; // per-year results
-
-    let currentSavings = investmentData.currentSavings; // feel free to change the shape of this input object!
-    const yearlyContribution = investmentData.yearlySavings; // as mentioned: feel free to change the shape...
-    const expectedReturn = investmentData.expectedInterest / 100;
-    const duration = investmentData.investmentDuration;
-
-    // The below code calculates yearly results (total savings, interest etc)
-    for (let i = 0; i < duration; i++) {
-      const yearlyInterest = currentSavings * expectedReturn;
-      currentSavings += yearlyInterest + yearlyContribution;
-
-      yearlyDataTemp.push({
-        // feel free to change the shape of the data pushed to the array!
-        year: i + 1,
-        yearlyInterest: yearlyInterest,
-        savingsEndOfYear: currentSavings,
-        yearlyContribution: yearlyContribution,
-      });
-    }
-    setYearlyData(yearlyDataTemp);
   };
 
   return (
@@ -67,7 +57,10 @@ function App() {
       {/* Todo: Show below table conditionally (only once result data is available) */}
       {/* Show fallback text if no data is available */}
 
-      <Investment investments={yearlyData} />
+      <Investment
+        investments={yearlyData}
+        initialInvestment={investmentData.currentSavings}
+      />
     </div>
   );
 }
