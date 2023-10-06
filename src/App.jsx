@@ -16,7 +16,7 @@ function App() {
   const saveInvestmentDataHandler = (enteredInvestmentData) => {
     setInvestmentData(enteredInvestmentData);
 
-    const yearlyDataTemp = []; 
+    const yearlyDataTemp = [];
 
     let currentSavings = +enteredInvestmentData.currentSavings; // feel free to change the shape of this input object!
     const yearlyContribution = +enteredInvestmentData.yearlySavings; // as mentioned: feel free to change the shape...
@@ -46,6 +46,18 @@ function App() {
     });
   };
 
+  let content = <h1>No investment data</h1>;
+  console.log(yearlyData.length);
+
+  if (yearlyData.length > 0) {
+    content = (
+      <Investment
+        investments={yearlyData}
+        initialInvestment={investmentData.currentSavings}
+      />
+    );
+  }
+
   return (
     <div>
       <Header />
@@ -56,11 +68,7 @@ function App() {
 
       {/* Todo: Show below table conditionally (only once result data is available) */}
       {/* Show fallback text if no data is available */}
-
-      <Investment
-        investments={yearlyData}
-        initialInvestment={investmentData.currentSavings}
-      />
+      {content}
     </div>
   );
 }
